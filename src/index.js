@@ -111,6 +111,8 @@ class Onboarding extends Component {
     const {
       pages,
       alterBottomColor,
+      topBarHighlight,
+      topBarContent,
       bottomBarHeight,
       bottomBarColor,
       controlStatusBar,
@@ -174,6 +176,11 @@ class Onboarding extends Component {
         style={{ flex: 1, backgroundColor, justifyContent: 'center' }}
       >
         {controlStatusBar && <StatusBar barStyle={barStyle} />}
+        {showPagination && (
+          <SafeAreaView style={topBarHighlight ? styles.overlay : {}}>
+            {topBarContent}
+          </SafeAreaView>
+        )}
         <FlatList
           ref={list => {
             this.flatList = list;
@@ -236,6 +243,8 @@ Onboarding.propTypes = {
         .isRequired,
     })
   ).isRequired,
+  topBarHighlight: PropTypes.bool,
+  topBarContent: PropTypes.element,
   bottomBarHighlight: PropTypes.bool,
   bottomBarHeight: PropTypes.number,
   bottomBarColor: PropTypes.string,
@@ -264,6 +273,8 @@ Onboarding.propTypes = {
 };
 
 Onboarding.defaultProps = {
+  topBarHighlight: true,
+  topBarContent: null,
   bottomBarHighlight: true,
   bottomBarHeight: 60,
   bottomBarColor: 'transparent',
