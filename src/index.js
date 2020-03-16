@@ -185,6 +185,7 @@ class Onboarding extends Component {
           ref={list => {
             this.flatList = list;
           }}
+          onScrollToIndexFailed={()=>{}}
           data={pages}
           pagingEnabled
           horizontal
