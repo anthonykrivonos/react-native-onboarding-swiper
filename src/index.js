@@ -239,9 +239,8 @@ Onboarding.propTypes = {
         PropTypes.string,
         PropTypes.element,
         PropTypes.func,
-      ]).isRequired,
-      subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
-        .isRequired,
+      ]),
+      subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     })
   ).isRequired,
   topBarHighlight: PropTypes.bool,
