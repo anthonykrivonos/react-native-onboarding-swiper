@@ -135,7 +135,7 @@ class Onboarding extends Component {
       skipToPage,
     } = this.props;
     const currentPage = pages[this.state.currentPage];
-    const currentBackgroundColor = currentPage && currentPage.backgroundColor ? urrentPage.backgroundColor : 'white';
+    const currentBackgroundColor = currentPage && currentPage.backgroundColor ? currentPage.backgroundColor : 'white';
     const isLight = tinycolor(currentBackgroundColor).getBrightness() > 180;
     const barStyle = isLight ? 'dark-content' : 'light-content';
     const bottomBarHighlight =
