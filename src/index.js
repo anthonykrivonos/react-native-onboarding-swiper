@@ -65,16 +65,17 @@ class Onboarding extends Component {
     });
   };
 
+  goBack = () => {
+    this.flatList.scrollToIndex({
+      animated: true,
+      index: Math.max(0, this.state.currentPage - 1),
+    });
+  };
+
   _onLayout = () => {
     const { width, height } = Dimensions.get('window');
     this.setState({ width, height });
   };
-
-  _handleDrag = (event, isSwipeEnabled) => {
-    if (!isSwipeEnabled) {
-      event.stopPropagation()
-    }
-  }
 
   keyExtractor = (item, index) => index.toString();
 
@@ -201,6 +202,7 @@ class Onboarding extends Component {
             this.flatList = list;
           }}
           onScrollToIndexFailed={()=>{}}
+          scrollEnabled={isSwipeEnabled}
           data={pages}
           pagingEnabled
           horizontal
@@ -210,7 +212,6 @@ class Onboarding extends Component {
           onViewableItemsChanged={this.onSwipePageChange}
           viewabilityConfig={itemVisibleHotfix}
           initialNumToRender={1}
-          onScrollBeginDrag={event => this._handleDrag(event, isSwipeEnabled)}
           extraData={
             this.state.width // ensure that the list re-renders on orientation change
           }
@@ -232,7 +233,10 @@ class Onboarding extends Component {
                 currentPage={this.state.currentPage}
                 controlStatusBar={controlStatusBar}
                 onSkip={skipFun}
-                onBack={onBack}
+                onBack={() => {
+                  onBack && onBack()
+                  this.goBack()
+                }}
                 onDone={onDone}
                 onNext={() => {
                   onNext && onNext()
