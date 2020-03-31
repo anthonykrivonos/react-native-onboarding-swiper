@@ -128,6 +128,7 @@ class Onboarding extends Component {
       showSkip,
       showNext,
       showDone,
+      showBack,
       showPagination,
       onSkip,
       onDone,
