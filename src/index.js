@@ -15,6 +15,7 @@ import tinycolor from 'tinycolor2';
 import Page from './Page';
 import Pagination from './Pagination';
 import Dot from './Dot';
+import BackButton from './buttons/BackButton';
 import SkipButton from './buttons/SkipButton';
 import NextButton from './buttons/NextButton';
 import DoneButton from './buttons/DoneButton';
@@ -68,6 +69,12 @@ class Onboarding extends Component {
     const { width, height } = Dimensions.get('window');
     this.setState({ width, height });
   };
+
+  _handleDrag = (event, isSwipeEnabled) => {
+    if (!isSwipeEnabled) {
+      event.stopPropagation()
+    }
+  }
 
   keyExtractor = (item, index) => index.toString();
 
@@ -124,15 +131,19 @@ class Onboarding extends Component {
       showPagination,
       onSkip,
       onDone,
+      onNext,
+      onBack,
       skipLabel,
       nextLabel,
       allowFontScalingButtons,
       SkipButtonComponent,
       DoneButtonComponent,
+      BackButtonComponent,
       NextButtonComponent,
       DotComponent,
       flatlistProps,
       skipToPage,
+      isSwipeEnabled,
     } = this.props;
     const currentPage = pages[this.state.currentPage];
     const currentBackgroundColor = currentPage && currentPage.backgroundColor ? currentPage.backgroundColor : 'white';
@@ -198,6 +209,7 @@ class Onboarding extends Component {
           onViewableItemsChanged={this.onSwipePageChange}
           viewabilityConfig={itemVisibleHotfix}
           initialNumToRender={1}
+          onScrollBeginDrag={event => this._handleDrag(event, isSwipeEnabled)}
           extraData={
             this.state.width // ensure that the list re-renders on orientation change
           }
@@ -211,21 +223,27 @@ class Onboarding extends Component {
                 isLight={isLight}
                 bottomBarHeight={bottomBarHeight}
                 bottomBarColor={bottomBarColor}
-                showSkip={showSkip}
+                showSkip={showBack ? false : showSkip}
                 showNext={showNext}
+                showBack={showBack}
                 showDone={showDone}
                 numPages={pages.length}
                 currentPage={this.state.currentPage}
                 controlStatusBar={controlStatusBar}
                 onSkip={skipFun}
+                onBack={onBack}
                 onDone={onDone}
-                onNext={this.goNext}
+                onNext={() => {
+                  onNext && onNext()
+                  this.goNext()
+                }}
                 skipLabel={skipLabel}
                 nextLabel={nextLabel}
                 allowFontScaling={allowFontScalingButtons}
                 SkipButtonComponent={SkipButtonComponent}
                 DoneButtonComponent={DoneButtonComponent}
                 NextButtonComponent={NextButtonComponent}
+                BackButtonComponent={BackButtonComponent}
                 DotComponent={DotComponent}
               />
             }
@@ -257,17 +275,21 @@ Onboarding.propTypes = {
   controlStatusBar: PropTypes.bool,
   showSkip: PropTypes.bool,
   showNext: PropTypes.bool,
+  showBack: PropTypes.bool,
   showDone: PropTypes.bool,
   showTopBar: PropTypes.bool,
   showBottomBar: PropTypes.bool,
   showPagination: PropTypes.bool,
   onSkip: PropTypes.func,
+  onNext: PropTypes.func,
+  onBack: PropTypes.func,
   onDone: PropTypes.func,
   skipLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   nextLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   SkipButtonComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   DoneButtonComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   NextButtonComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  BackButtonComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   DotComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   containerStyles: ViewPropTypes.style,
   imageContainerStyles: ViewPropTypes.style,
@@ -278,6 +300,7 @@ Onboarding.propTypes = {
   transitionAnimationDuration: PropTypes.number,
   skipToPage: PropTypes.number,
   pageIndexCallback: PropTypes.func,
+  isSwipeEnabled: PropTypes.bool,
 };
 
 Onboarding.defaultProps = {
@@ -290,6 +313,7 @@ Onboarding.defaultProps = {
   showPagination: true,
   showSkip: true,
   showNext: true,
+  showBack: true,
   showDone: true,
   showTopBar: true,
   showBottomBar: true,
@@ -297,9 +321,12 @@ Onboarding.defaultProps = {
   nextLabel: 'Next',
   onSkip: null,
   onDone: null,
+  onNext: null,
+  onBack: null,
   SkipButtonComponent: SkipButton,
   DoneButtonComponent: DoneButton,
   NextButtonComponent: NextButton,
+  BackButtonComponent: BackButton,
   DotComponent: Dot,
   containerStyles: null,
   imageContainerStyles: null,
@@ -310,6 +337,7 @@ Onboarding.defaultProps = {
   transitionAnimationDuration: 500,
   skipToPage: null,
   pageIndexCallback: null,
+  isSwipeEnabled: true,
 };
 
 const styles = {

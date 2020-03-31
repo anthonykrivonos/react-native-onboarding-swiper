@@ -13,18 +13,23 @@ const Pagination = ({
   controlStatusBar,
   showSkip,
   showNext,
+  showBack,
   showDone,
   onNext,
+  onBack,
   onSkip,
   onDone,
   skipLabel,
   nextLabel,
+  backLabel,
   allowFontScaling,
   SkipButtonComponent,
   NextButtonComponent,
+  BackButtonComponent,
   DoneButtonComponent,
   DotComponent,
 }) => {
+  const isFirstPage = currentPage === 0;
   const isLastPage = currentPage + 1 === numPages;
 
   const SkipButtonFinal = showSkip &&
@@ -48,11 +53,21 @@ const Pagination = ({
     !isLastPage && (
       <NextButtonComponent
         nextLabel={nextLabel}
-		allowFontScaling={allowFontScaling}
+		    allowFontScaling={allowFontScaling}
         isLight={isLight}
         onPress={onNext}
       />
     );
+
+    const BackButtonFinal = showBack &&
+      !isFirstPage && (
+        <BackButtonComponent
+          backLabel={backLabel}
+          allowFontScaling={allowFontScaling}
+          isLight={isLight}
+          onPress={onBack}
+        />
+      );
 
   const DoneButtonFinal = showDone &&
     isLastPage && (
@@ -78,7 +93,10 @@ const Pagination = ({
         ...styles.container,
       }}
     >
-      <View style={styles.buttonLeft}>{SkipButtonFinal}</View>
+      <View style={styles.buttonLeft}>
+        {BackButtonFinal}
+        {SkipButtonFinal}
+      </View>
       <Dots
         isLight={isLight}
         numPages={numPages}
